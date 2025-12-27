@@ -1,0 +1,3 @@
+# Optional UX enhancements (not required for core functionality)
+prompt-toolkit>=3.0.39  # Rich CLI with autocomplete, syntax highlighting
+rich>=13.5.2            # Beautiful table output and formatted text
