@@ -1,0 +1,453 @@
+openapi: 3.1.0
+info:
+  title: SDD System Phase 1 API
+  description: |
+    Spec-Driven Development System - Phase 1 Backend API
+
+    Transforms natural language user intent into structured specifications.
+
+    ## Features
+    - Intent validation (50-500 words)
+    - Entity extraction
+    - Constraint identification
+    - Assumption detection
+    - Confidence scoring
+
+    ## Non-Goals (Phase 1)
+    - No persistence
+    - No authentication
+    - No planning or execution
+  version: 0.1.0
+  contact:
+    name: SDD Development Team
+  license:
+    name: MIT
+
+servers:
+  - url: http://localhost:8000
+    description: Local development server
+  - url: http://localhost:8000/api/v1
+    description: Local development with version prefix
+
+tags:
+  - name: spec
+    description: Specification generation endpoints
+  - name: health
+    description: Health check endpoints
+
+paths:
+  /api/v1/spec:
+    post:
+      tags:
+        - spec
+      summary: Generate structured specification from user intent
+      description: |
+        Accepts natural language description and returns structured specification.
+
+        **Processing Steps**:
+        1. Validate input (word count, encoding)
+        2. Extract goal and entities
+        3. Identify constraints and assumptions
+        4. Calculate confidence score
+        5. Return structured spec with metadata
+      operationId: generateSpec
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IntentRequest'
+            examples:
+              todoApp:
+                summary: Todo application
+                value:
+                  text: "Create a task management application where users can create, edit, and delete tasks. Each task should have a title, description, priority level, and due date. Users should be able to categorize tasks using tags and filter tasks by priority or tag."
+              blogSystem:
+                summary: Blog system
+                value:
+                  text: "Build a blogging platform where authors can write and publish posts. Each post should support markdown formatting and have categories. Readers should be able to comment on posts and search for posts by category or keyword. Include an admin dashboard for content moderation."
+              crmSystem:
+                summary: CRM system
+                value:
+                  text: "Design a customer relationship management system for tracking leads, contacts, and deals. Sales representatives should be able to create opportunities, log interactions, and track deal progression through pipeline stages. Include reporting capabilities for sales metrics and forecasting."
+      responses:
+        '200':
+          description: Successfully generated specification
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StructuredSpec'
+              examples:
+                todoAppSpec:
+                  summary: Generated spec for todo app
+                  value:
+                    goal: "Build a task management system with priority and categorization features"
+                    entities:
+                      - name: "Task"
+                        type: "Domain"
+                        description: "Core work item that users manage"
+                        attributes: ["title", "description", "priority", "dueDate", "status"]
+                        relationships:
+                          - type: "belongs_to"
+                            target: "User"
+                            description: "Each task is owned by a user"
+                          - type: "many_to_many"
+                            target: "Tag"
+                            description: "Tasks can have multiple tags"
+                      - name: "Tag"
+                        type: "Resource"
+                        description: "Categorization label for tasks"
+                        attributes: ["name", "color"]
+                        relationships:
+                          - type: "many_to_many"
+                            target: "Task"
+                            description: "Tags apply to multiple tasks"
+                      - name: "User"
+                        type: "Actor"
+                        description: "Person who manages tasks"
+                        attributes: ["name", "email"]
+                        relationships:
+                          - type: "has_many"
+                            target: "Task"
+                            description: "Users own multiple tasks"
+                    constraints:
+                      - type: "Business"
+                        description: "Users must be able to filter tasks by priority level"
+                        priority: "Must"
+                      - type: "Business"
+                        description: "Tasks should support due date reminders"
+                        priority: "Should"
+                      - type: "Usability"
+                        description: "Tags should support color coding for visual distinction"
+                        priority: "Should"
+                    assumptions:
+                      - description: "Single-user application (no multi-tenancy)"
+                        confidence: "Medium"
+                        needs_clarification: true
+                      - description: "No recurring tasks required"
+                        confidence: "Low"
+                        needs_clarification: true
+                    metadata:
+                      generated_at: "2025-12-31T10:30:01.234Z"
+                      processing_time_ms: 123.45
+                      confidence_score: 0.85
+                      warnings: []
+        '400':
+          description: Invalid input - validation failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                tooShort:
+                  summary: Input too short
+                  value:
+                    error: "Invalid input"
+                    details: "Intent text must contain at least 50 words. Received: 20 words."
+                    code: "VALIDATION_ERROR"
+                tooLong:
+                  summary: Input too long
+                  value:
+                    error: "Invalid input"
+                    details: "Intent text must contain at most 500 words. Received: 650 words."
+                    code: "VALIDATION_ERROR"
+        '422':
+          description: Ambiguous intent - unable to generate complete spec
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AmbiguousIntentError'
+              examples:
+                noGoal:
+                  summary: Goal not identifiable
+                  value:
+                    error: "Ambiguous intent"
+                    details: "Unable to identify primary goal from provided text"
+                    code: "AMBIGUOUS_INTENT"
+                    suggestions:
+                      - "Specify the main purpose or problem this system should solve"
+                      - "Describe what users should be able to accomplish"
+                fewEntities:
+                  summary: Insufficient entities
+                  value:
+                    error: "Ambiguous intent"
+                    details: "Could not extract sufficient entities to form a spec"
+                    code: "AMBIGUOUS_INTENT"
+                    suggestions:
+                      - "Describe the key things users will interact with"
+                      - "List the main data types or resources in the system"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                serverError:
+                  summary: Unexpected error
+                  value:
+                    error: "Internal server error"
+                    details: "An unexpected error occurred during spec generation"
+                    code: "INTERNAL_ERROR"
+
+  /api/v1/health:
+    get:
+      tags:
+        - health
+      summary: Health check endpoint
+      description: Returns service health status and version information
+      operationId: healthCheck
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+              examples:
+                healthy:
+                  value:
+                    status: "healthy"
+                    version: "0.1.0"
+                    timestamp: "2025-12-31T10:30:00Z"
+
+components:
+  schemas:
+    IntentRequest:
+      type: object
+      required:
+        - text
+      properties:
+        text:
+          type: string
+          minLength: 50
+          maxLength: 5000
+          description: Natural language description of desired system (50-500 words)
+          example: "Create a task management application where users can create, edit, and delete tasks. Each task should have a title, description, priority level, and due date."
+
+    StructuredSpec:
+      type: object
+      required:
+        - goal
+        - entities
+        - constraints
+        - assumptions
+        - metadata
+      properties:
+        goal:
+          type: string
+          minLength: 10
+          maxLength: 200
+          description: Primary objective of the system
+          example: "Build a task management system with priority and categorization features"
+        entities:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/Entity'
+          description: Domain entities in the system
+        constraints:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/Constraint'
+          description: System requirements and limitations
+        assumptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Assumption'
+          description: Implicit assumptions detected in user intent
+        metadata:
+          $ref: '#/components/schemas/SpecMetadata'
+
+    Entity:
+      type: object
+      required:
+        - name
+        - type
+        - description
+        - attributes
+      properties:
+        name:
+          type: string
+          pattern: '^[A-Z][a-zA-Z0-9]*$'
+          minLength: 2
+          maxLength: 50
+          description: Entity name in PascalCase
+          example: "Task"
+        type:
+          type: string
+          enum: [Domain, Resource, Actor, Process]
+          description: Classification of entity
+          example: "Domain"
+        description:
+          type: string
+          minLength: 10
+          maxLength: 200
+          description: What this entity represents
+          example: "Core work item that users manage"
+        attributes:
+          type: array
+          minItems: 1
+          items:
+            type: string
+          description: Entity properties
+          example: ["title", "description", "priority", "dueDate", "status"]
+        relationships:
+          type: array
+          items:
+            $ref: '#/components/schemas/Relationship'
+          description: Connections to other entities
+
+    Relationship:
+      type: object
+      required:
+        - type
+        - target
+      properties:
+        type:
+          type: string
+          enum: [one_to_one, one_to_many, many_to_one, many_to_many, belongs_to, has_many, has_one]
+          description: Nature of relationship
+          example: "belongs_to"
+        target:
+          type: string
+          description: Name of related entity
+          example: "User"
+        description:
+          type: string
+          description: Explanation of relationship
+          example: "Each task is owned by a user"
+
+    Constraint:
+      type: object
+      required:
+        - type
+        - description
+        - priority
+      properties:
+        type:
+          type: string
+          enum: [Performance, Security, Business, Technical, Usability]
+          description: Category of constraint
+          example: "Business"
+        description:
+          type: string
+          minLength: 10
+          maxLength: 300
+          description: What is required or constrained
+          example: "Users must be able to filter tasks by priority level"
+        priority:
+          type: string
+          enum: [Must, Should, Could]
+          description: Importance level
+          example: "Must"
+
+    Assumption:
+      type: object
+      required:
+        - description
+        - confidence
+        - needs_clarification
+      properties:
+        description:
+          type: string
+          minLength: 10
+          maxLength: 300
+          description: What is assumed
+          example: "Single-user application (no multi-tenancy)"
+        confidence:
+          type: string
+          enum: [High, Medium, Low]
+          description: How certain is this assumption
+          example: "Medium"
+        needs_clarification:
+          type: boolean
+          description: Should user confirm this?
+          example: true
+
+    SpecMetadata:
+      type: object
+      required:
+        - generated_at
+        - processing_time_ms
+        - confidence_score
+        - warnings
+      properties:
+        generated_at:
+          type: string
+          format: date-time
+          description: When spec was generated (ISO 8601)
+          example: "2025-12-31T10:30:01.234Z"
+        processing_time_ms:
+          type: number
+          format: float
+          minimum: 0.0
+          description: How long generation took (milliseconds)
+          example: 123.45
+        confidence_score:
+          type: number
+          format: float
+          minimum: 0.0
+          maximum: 1.0
+          description: Overall spec quality (0.0-1.0)
+          example: 0.85
+        warnings:
+          type: array
+          items:
+            type: string
+          description: Issues or suggestions
+          example: ["MANY_ASSUMPTIONS: 3 assumptions require user clarification"]
+
+    ErrorResponse:
+      type: object
+      required:
+        - error
+        - details
+        - code
+      properties:
+        error:
+          type: string
+          description: Error message
+          example: "Invalid input"
+        details:
+          type: string
+          description: Detailed explanation
+          example: "Intent text must contain at least 50 words"
+        code:
+          type: string
+          description: Error code for programmatic handling
+          example: "VALIDATION_ERROR"
+
+    AmbiguousIntentError:
+      allOf:
+        - $ref: '#/components/schemas/ErrorResponse'
+        - type: object
+          properties:
+            suggestions:
+              type: array
+              items:
+                type: string
+              description: Suggestions for clarifying intent
+              example: ["Specify the main purpose or problem this system should solve"]
+
+    HealthResponse:
+      type: object
+      required:
+        - status
+        - version
+      properties:
+        status:
+          type: string
+          enum: [healthy, degraded, unhealthy]
+          description: Service health status
+          example: "healthy"
+        version:
+          type: string
+          description: API version
+          example: "0.1.0"
+        timestamp:
+          type: string
+          format: date-time
+          description: Current server time
+          example: "2025-12-31T10:30:00Z"

@@ -1,0 +1,99 @@
+========================================
+   HOW TO RUN PHASE 1 - QUICK GUIDE
+========================================
+
+✅ FIXED: Import errors resolved!
+
+-----------------------------------------
+1. RUN THE APPLICATION
+-----------------------------------------
+
+From the repository root:
+
+    python3 phase1/app/main.py
+
+-----------------------------------------
+2. YOU'LL SEE THIS
+-----------------------------------------
+
+============================================================
+               Phase 1: Spec-Driven Todo
+============================================================
+
+Commands:
+  add task: <title>    - Create new todo
+  list                 - Show all todos
+  complete <id>        - Mark todo as done
+  exit                 - Quit application
+
+>
+
+-----------------------------------------
+3. TRY THESE COMMANDS
+-----------------------------------------
+
+> add task: write documentation
+✓ Todo #1 created: 'write documentation'
+
+> add task: implement feature
+✓ Todo #2 created: 'implement feature'
+
+> list
+
+Todos (2):
+  [1] ☐ write documentation
+  [2] ☐ implement feature
+
+> complete 1
+✓ Todo #1 marked as completed
+
+> list
+
+Todos (2):
+  [1] ☑ write documentation
+  [2] ☐ implement feature
+
+> exit
+
+Goodbye!
+
+-----------------------------------------
+4. COMMAND REFERENCE
+-----------------------------------------
+
+ADD TASK:
+  add task: <your task here>
+  create task: <your task here>
+  new task: <your task here>
+
+LIST TASKS:
+  list
+  list tasks
+  show tasks
+
+COMPLETE TASK:
+  complete <id>
+  done <id>
+  finish <id>
+
+EXIT:
+  exit
+  quit
+  q
+  (or press Ctrl+C)
+
+-----------------------------------------
+5. TROUBLESHOOTING
+-----------------------------------------
+
+If you see "python3: command not found":
+  → Try: python phase1/app/main.py
+
+If you see import errors:
+  → Make sure you're in the repo root directory
+  → Run: pwd (should show ...in-memory-python-console-app)
+
+-----------------------------------------
+
+✅ Phase 1 is ready to use!
+Date: 2026-01-01

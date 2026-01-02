@@ -9,6 +9,9 @@ license = {text = "MIT"}
 
 dependencies = []
 
+[project.scripts]
+todo = "src.todo_cli:main"
+
 [project.optional-dependencies]
 dev = [
     "pytest>=7.4.0",

@@ -178,15 +178,55 @@ tests/
 
 ## Architecture
 
+### Spec-Driven Development (SDD) System
+
+The project includes a reusable intelligence framework with a Spec-Driven Development (SDD) system for transforming natural language intent into structured implementation artifacts.
+
+#### SDD Pipeline Stages
+
+1. **Intent Parsing**: Classifies user intent (CLARIFY, SPECIFY, PLAN, GUIDE) and extracts metadata
+2. **Specification Generation**: Creates formal spec.md documents from intent using template-based generation
+3. **Planning**: Breaks requirements into actionable tasks with dependencies and effort estimates
+4. **Execution Guidance**: Provides code scaffolding, best practices, and implementation order
+
+#### SDD CLI Commands
+
+```bash
+# Parse natural language into intent
+python -m src.intelligence.main --sdd parse "I want to create a user authentication system"
+
+# Generate specification
+python -m src.intelligence.main --sdd spec "create a user authentication system with login and registration"
+
+# Generate implementation plan
+python -m src.intelligence.main --sdd plan spec.md
+
+# Generate execution guide
+python -m src.intelligence.main --sdd guide plan.md
+
+# Execute full pipeline
+python -m src.intelligence.main --sdd pipeline "create a REST API for todo management"
+
+# List registered agents and skills
+python -m src.intelligence.main --sdd list --verbose
+```
+
+#### SDD Components
+
+- **Agents**: IntentAgent, SpecAgent, PlanAgent, GuideAgent
+- **Skills**: IntentParsingSkill, AmbiguityDetectionSkill, RequirementExtractionSkill, TaskBreakdownSkill, DependencyResolutionSkill, CodeScaffoldingSkill, BestPracticesSkill
+- **Engine**: SDDEngine with WorkflowManager for multi-stage orchestration
+- **Data Models**: Intent, Spec, Plan, Task, Artifact, Decision, IntentType
+- **Context**: SDDContext with artifact management and history tracking
+
 ### Core Principles (from Constitution)
 
-1. **Memory-First**: Operates entirely in-memory, optional persistence
-2. **Simplicity**: Functions <50 lines, clear names, type hints
-3. **Security**: Custom import hooks, input validation, no eval/exec on raw input
-4. **Modularity**: 9 focused modules, clear interfaces, no circular dependencies
-5. **TDD**: Tests written first, 80% coverage minimum
-6. **UX**: Structured errors, help docs, confirmations for destructive ops
-7. **Observability**: Structured logging, state inspection, debug mode
+1. **Reusable Intelligence Framework**: The primary goal is to build a framework for reusable intelligence, not a single-purpose application. All components, from skills to agents, MUST be designed for broad applicability and reusability over one-off logic.
+2. **Intelligence-First Design**: Prioritize reasoning, planning, and adaptability over raw execution. The system MUST understand "why" a task is being performed before executing "how," clearly separating the planning/reasoning layer from the execution layer.
+3. **Domain-Agnostic & Modular Architecture**: The framework's core design and concepts MUST be language-agnostic and contain no hardcoded, domain-specific logic. The architecture MUST be composed of clear, modular, and composable components (e.g., skills, agents, tools) with well-defined interfaces.
+4. **Skill-Based Functionality**: All functional capabilities MUST be developed as discrete, independently testable "skills." Skills are the fundamental, reusable building blocks of all system functionality, not monolithic features.
+5. **Safety and Introspectability**: The framework MUST enforce safe execution environments and provide deep introspectability. The system's state, reasoning process, and execution history must be transparent, auditable, and easy to debug.
+6. **Frozen Intelligence Architecture**: The core intelligence layer (Context, Skills, Runtime, Engine) is considered stable and frozen. Future projects MAY extend its functionality through new skills or agents, but MUST NOT modify its core logic. Changes to this layer require explicit versioning and a formal architectural review process.
 
 ### Session State Structure
 

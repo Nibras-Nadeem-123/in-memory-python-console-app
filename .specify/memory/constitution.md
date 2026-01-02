@@ -1,183 +1,103 @@
 <!--
 Sync Impact Report:
-- Version change: none → 1.0.0
-- Initial constitution creation for in-memory Python console app
-- Principles defined: 7 core principles covering memory management, simplicity, security, modularity, testing, user safety, and observability
-- Added sections: Runtime Constraints, Development Workflow, Governance
+- Version change: 1.1.0 → 1.2.0
+- Modified principles: VI. Frozen Intelligence Architecture - enhanced with explicit rules.
+- Added sections: None.
+- Removed sections: None.
 - Templates requiring updates:
-  ✅ Constitution created (this file)
-  ⚠ Review plan-template.md for constitution alignment (pending)
-  ⚠ Review spec-template.md for constitution alignment (pending)
-  ⚠ Review tasks-template.md for constitution alignment (pending)
-- Follow-up TODOs: None (all placeholders filled)
+  - ✅ .specify/templates/plan-template.md
+  - ✅ .specify/templates/spec-template.md
+  - ✅ .specify/templates/tasks-template.md
+  - ⚠ .claude/commands/*.md (Manual check for agent-specific names recommended)
+  - ✅ README.md
+- Follow-up TODOs: None.
 -->
-
-# In-Memory Python Console App Constitution
+# Reusable Intelligence Framework Constitution
 
 ## Core Principles
 
-### I. Memory-First Architecture
+### I. Reusable Intelligence Framework
+The primary goal is to build a framework for reusable intelligence, not a single-purpose application. All components, from skills to agents, MUST be designed for broad applicability and reusability over one-off logic.
 
-The application MUST operate entirely in memory during runtime. All data structures, state, and computation MUST use in-memory storage (dictionaries, lists, objects) unless optional persistence is explicitly requested by the user.
+### II. Intelligence-First Design
+Prioritize reasoning, planning, and adaptability over raw execution. The system MUST understand "why" a task is being performed before executing "how," clearly separating the planning/reasoning layer from the execution layer.
 
-**Rationale**: In-memory operation ensures maximum performance, simplicity, and portability. The console app must be lightweight and fast, with no mandatory external dependencies for storage.
+### III. Domain-Agnostic & Modular Architecture
+The framework's core design and concepts MUST be language-agnostic and contain no hardcoded, domain-specific logic. The architecture MUST be composed of clear, modular, and composable components (e.g., skills, agents, tools) with well-defined interfaces.
 
-**Non-negotiable rules**:
-- No persistent database connections required for core functionality
-- Session state preserved in memory structures (e.g., Python dicts, dataclasses)
-- Optional persistence (file export, JSON dumps) MUST be clearly separated from core logic
-- Memory cleanup and garbage collection considerations documented for long-running sessions
+### IV. Skill-Based Functionality
+All functional capabilities MUST be developed as discrete, independently testable "skills." Skills are the fundamental, reusable building blocks of all system functionality, not monolithic features.
 
-### II. Simplicity and Clarity
+### V. Safety and Introspectability
+The framework MUST enforce safe execution environments and provide deep introspectability. The system's state, reasoning process, and execution history must be transparent, auditable, and easy to debug.
 
-Code MUST be simple, readable, and self-documenting. Functions MUST be small, focused, and have clear single responsibilities. Complex operations MUST be decomposed into well-named functions.
+### VI. Frozen Intelligence Architecture
 
-**Rationale**: Console applications benefit from maintainability and rapid iteration. Clear code reduces cognitive load and enables confident modifications.
+The core intelligence layer is considered **stable, frozen, and reusable**. This section codifies the rules governing its maintenance and evolution.
 
-**Non-negotiable rules**:
-- Functions limited to 50 lines of code (excluding docstrings)
-- Descriptive names for functions, variables, and classes (no single-letter names except loop iterators)
-- Type hints required for all function signatures (Python 3.9+ syntax)
-- Docstrings required for all public functions and classes (Google or NumPy style)
+#### Frozen Components (v1.0.0)
 
-### III. Security and Safe Evaluation
+The following modules constitute the frozen intelligence layer:
 
-User input MUST be validated and sanitized. Code evaluation (e.g., `eval()`, `exec()`) MUST be sandboxed or avoided entirely. Untrusted input MUST NOT be executed directly.
+| Module | Path | Purpose |
+|--------|------|---------|
+| Context System | `src/intelligence/context.py` | State management, history, persistence |
+| Skills Interface | `src/intelligence/skills/skill_interface.py` | Skill ABC, types, exceptions |
+| Skill Registry | `src/intelligence/skills/skill_registry.py` | Skill registration and discovery |
+| Runtime Engine | `src/intelligence/runtime.py` | Plan execution, agent routing |
+| Intelligence Engine | `src/intelligence/engine.py` | Goal-to-outcome transformation |
 
-**Rationale**: Console applications often accept arbitrary user commands. Unsafe evaluation creates security vulnerabilities (code injection, system compromise). Safe alternatives MUST be prioritized.
+#### Rules for Frozen Layer
 
-**Non-negotiable rules**:
-- NO use of `eval()` or `exec()` on raw user input without sandboxing
-- Command parsing via explicit command registry or pattern matching
-- Input validation with whitelists/allowed patterns before processing
-- Error messages MUST NOT leak sensitive information (file paths, system details)
-- Secrets (API keys, tokens) MUST be loaded from environment variables or `.env` files, NEVER hardcoded
+1. **Extension, Not Modification**: Future projects MAY extend the framework through:
+   - New skills implementing the `Skill` interface
+   - New agents implementing the `Agent` interface
+   - Custom intent parsers via composition
+   - Wrapper classes adding domain-specific logic
 
-### IV. Modular Design
+2. **Core Logic Protection**: Projects MUST NOT:
+   - Modify the core logic of frozen modules
+   - Change method signatures in abstract base classes
+   - Alter exception hierarchies
+   - Remove or rename public API exports
 
-Application logic MUST be organized into independent, testable modules. Core functionality (parsing, execution, state management) MUST be separated from UI/display concerns.
+3. **Explicit Versioning**: Any change to frozen modules requires:
+   - Semantic versioning bump (major for breaking, minor for additions)
+   - ADR documenting the rationale
+   - Migration guide for downstream consumers
+   - Updated test coverage for changes
 
-**Rationale**: Modularity enables unit testing, reusability, and independent evolution of components. Console apps often grow from simple prototypes to complex systems.
+4. **Stability Guarantee**: The intelligence layer is designed to be:
+   - Reusable across multiple projects
+   - Stable for long-term maintenance
+   - Backward-compatible within major versions
 
-**Non-negotiable rules**:
-- Separation of concerns: command parsing, execution logic, state management, display output as distinct modules
-- Each module MUST have a clear interface (public functions/classes with contracts)
-- Circular dependencies prohibited
-- Business logic MUST NOT depend on display/formatting code
+#### Permitted Changes
 
-### V. Test-Driven Development (TDD)
-
-Tests MUST be written before implementation for all non-trivial functionality. The Red-Green-Refactor cycle MUST be followed.
-
-**Rationale**: TDD ensures correctness, provides living documentation, and reduces regressions. Console apps with complex command logic require robust testing.
-
-**Non-negotiable rules**:
-- Tests written → User approved → Tests fail → Implementation → Tests pass
-- Minimum 80% code coverage for core modules (parsing, execution, state)
-- Unit tests for pure functions (stateless logic)
-- Integration tests for command workflows (input → processing → output)
-- Edge cases and error paths MUST have explicit tests
-
-### VI. User Experience and Error Handling
-
-The console interface MUST provide clear, helpful feedback. Errors MUST be human-readable with actionable guidance. Commands MUST support help/documentation.
-
-**Rationale**: Console apps live or die by usability. Cryptic errors frustrate users and create support burden.
-
-**Non-negotiable rules**:
-- All commands MUST have `--help` or equivalent documentation
-- Error messages MUST state what went wrong and suggest fixes (e.g., "Unknown command 'foo'. Did you mean 'bar'? Type 'help' for available commands.")
-- Command output MUST be clean and readable (structured tables, JSON formatting where appropriate)
-- Confirmation prompts for destructive operations (clear state, exit with unsaved changes)
-
-### VII. Observability and Debugging
-
-Application state MUST be inspectable. Logging MUST be structured and configurable. Debug mode MUST provide visibility into execution flow.
-
-**Rationale**: In-memory apps can be opaque without proper instrumentation. Observability enables rapid debugging and user support.
-
-**Non-negotiable rules**:
-- Structured logging with configurable levels (DEBUG, INFO, WARNING, ERROR)
-- State inspection command (e.g., `show state`, `inspect`) for debugging
-- Execution traces available in debug mode (command history, state changes)
-- Performance metrics for long-running operations (execution time, memory usage)
-
-## Runtime Constraints
-
-### Python Version and Dependencies
-
-- **Target Python Version**: Python 3.9+ (for modern type hints and standard library features)
-- **Dependency Policy**: Minimize external dependencies. Standard library preferred. Third-party libraries MUST be justified (e.g., `prompt_toolkit` for rich CLI UX, `click` for command parsing).
-- **Virtual Environment**: MUST use `venv` or equivalent for dependency isolation
-- **Dependency Documentation**: `requirements.txt` or `pyproject.toml` MUST list all dependencies with version pins
-
-### Performance Standards
-
-- **Startup Time**: Application MUST start in under 1 second for typical use cases
-- **Command Response Time**: Interactive commands MUST respond in under 100ms for simple operations
-- **Memory Footprint**: Base memory usage MUST stay under 50MB for idle state
-- **Session Limits**: Application MUST handle sessions with up to 10,000 in-memory objects without degradation
-
-### Optional Persistence
-
-- **Format**: JSON or Pickle for session state export/import (user choice)
-- **Location**: User-specified file paths or default `~/.app-name/sessions/`
-- **Atomicity**: File writes MUST be atomic (write to temp, rename on success)
-- **Backward Compatibility**: Exported formats MUST be versioned; breaking changes MUST be migrated
+| Change Type | Allowed | Process Required |
+|-------------|---------|------------------|
+| Add new skills | Yes | None |
+| Add new agents | Yes | None |
+| Bug fixes in frozen modules | Yes | Patch version bump |
+| New optional parameters | Yes | Minor version bump + ADR |
+| Breaking interface changes | No | Major version bump + ADR + Migration |
+| Performance optimizations | Yes | Patch/minor version bump |
+| Documentation updates | Yes | None |
 
 ## Development Workflow
 
-### Code Review and Quality Gates
+### Spec-Driven Development
+All new features or significant changes MUST begin with a specification (`spec.md`). The spec defines the "what" and "why" and must be approved before planning or implementation begins.
 
-- All changes MUST pass linting (`ruff`, `pylint`, or `flake8`) and type checking (`mypy`)
-- All tests MUST pass before merge
-- Code review required for changes to core modules (state management, command execution)
-- Security-sensitive code (input validation, persistence) MUST have dedicated review focus
-
-### Version Control
-
-- Feature branches for all non-trivial changes (naming: `###-feature-name`)
-- Commit messages MUST be descriptive (conventional commits style preferred: `feat:`, `fix:`, `docs:`, `refactor:`)
-- Pull requests MUST reference related specs/tasks from `specs/` directory
-
-### Testing Strategy
-
-- Unit tests in `tests/unit/` for pure functions and isolated modules
-- Integration tests in `tests/integration/` for command workflows
-- Run tests with `pytest` (or equivalent) before commits
-- Continuous integration (CI) MUST run full test suite on all branches
+### Test-Driven Development (TDD)
+TDD is mandatory. For any new skill or component, failing tests MUST be written and approved before the implementation code is created, following a strict Red-Green-Refactor cycle.
 
 ## Governance
 
-### Amendment Process
+This Constitution is the single source of truth for all architectural and development principles. It supersedes all other practices and documents.
 
-This constitution supersedes all other development practices. Amendments require:
+- **Compliance**: All code reviews and architectural decisions MUST verify compliance with these principles. Any deviation requires a formal exception process documented in an ADR (Architecture Decision Record).
+- **Amendments**: Changes to this Constitution require a proposal, review, and a documented migration plan if the changes are backward-incompatible.
+- **Guidance**: Use this document as the primary guidance for all runtime development activities.
 
-1. Documented justification (why the change, what problem it solves)
-2. Review by project stakeholders
-3. Migration plan for existing code if principles change
-4. Version bump according to semantic versioning:
-   - **MAJOR**: Backward-incompatible principle changes (removing/redefining core rules)
-   - **MINOR**: New principles added or material expansions to existing guidance
-   - **PATCH**: Clarifications, wording improvements, typo fixes
-
-### Compliance
-
-- All pull requests and code reviews MUST verify compliance with these principles
-- Violations MUST be justified in writing and approved (documented in `Complexity Tracking` section of plan.md)
-- Complexity MUST be justified: if a simpler approach exists, it MUST be used
-
-### AI Agent's Role
-
-The AI agent assisting with development MUST:
-
-- Prioritize these principles in all code generation and suggestions
-- Flag potential violations and suggest compliant alternatives
-- Generate tests before implementations (TDD enforcement)
-- Validate security considerations (input handling, evaluation safety)
-- Create Prompt History Records (PHRs) for development sessions
-- Suggest Architectural Decision Records (ADRs) for significant design choices
-- Use MCP tools and CLI commands for verification (not internal knowledge)
-- Ask clarifying questions when requirements are ambiguous (Human as Tool strategy)
-
-**Version**: 1.0.0 | **Ratified**: 2025-12-27 | **Last Amended**: 2025-12-27
+**Version**: 1.2.0 | **Ratified**: 2025-12-28 | **Last Amended**: 2025-12-29

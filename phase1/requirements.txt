@@ -1,0 +1,5 @@
+# Phase 1: Console-based Spec-Driven Todo Application
+# Python 3.11+ required
+
+# No external dependencies - uses Python standard library only
+# (datetime, dataclasses, enum, re, typing)
