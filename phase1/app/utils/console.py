@@ -2,7 +2,7 @@
 
 from typing import List
 
-from app.todo.models import Todo
+from core.models.todo_models import Todo
 
 
 class ConsoleUI:

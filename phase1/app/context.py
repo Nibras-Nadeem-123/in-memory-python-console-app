@@ -1,7 +1,7 @@
 """Application context - holds state and dependencies."""
 
-from app.spec.parser import SpecParser
-from app.todo.service import TodoService
+from phase1.app.spec.parser import SpecParser
+from core.services.todo_service import TodoService
 
 
 class AppContext:

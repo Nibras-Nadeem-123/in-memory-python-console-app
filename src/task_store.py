@@ -1,272 +1,124 @@
-"""In-memory task storage with undo support.
+# src/task_store.py
 
-Provides TaskStore class for managing task state and operation history.
-"""
+import dataclasses
+from typing import Dict, List, Optional
 
-from typing import Optional
-
-from src.task_model import Operation, Task
-
-
-class TaskNotFoundError(Exception):
-    """Raised when a task reference cannot be found."""
-
-    def __init__(self, target: str) -> None:
-        self.target = target
-        super().__init__(f"Task '{target}' not found")
-
-
-class AmbiguousTaskError(Exception):
-    """Raised when multiple tasks match a reference."""
-
-    def __init__(self, target: str, matches: list[str]) -> None:
-        self.target = target
-        self.matches = matches
-        super().__init__(
-            f"Multiple tasks match '{target}': {', '.join(matches)}. Please be more specific."
-        )
-
-
-class AlreadyCompletedError(Exception):
-    """Raised when attempting to complete an already completed task."""
-
-    def __init__(self, title: str) -> None:
-        self.title = title
-        super().__init__(f"Task '{title}' is already completed")
-
-
-class NoHistoryError(Exception):
-    """Raised when undo is called with no history."""
-
-    def __init__(self) -> None:
-        super().__init__("Nothing to undo")
-
+from src.task_model import Task, TaskStatus
 
 class TaskStore:
-    """Manages in-memory task state with undo support.
+    """Manages in-memory task collection."""
 
-    Attributes:
-        tasks: Dictionary mapping task ID to Task.
-        history: List of operations for undo support.
-    """
-
-    def __init__(self) -> None:
-        self._tasks: dict[int, Task] = {}
+    def __init__(self):
+        """Initializes the TaskStore with an empty task dictionary and a starting ID."""
+        self._tasks: Dict[int, Task] = {}
         self._next_id: int = 1
-        self._history: list[Operation] = []
 
-    @property
-    def tasks(self) -> dict[int, Task]:
-        """Return all tasks as a dictionary."""
-        return self._tasks.copy()
-
-    @property
-    def history(self) -> list[Operation]:
-        """Return operation history as a read-only copy."""
-        return self._history.copy()
-
-    def add_task(self, title: str, due_date: Optional[str] = None) -> Task:
-        """Create a new task with the given title and optional due date.
+    def add(self, task: Task) -> int:
+        """
+        Adds a task to the store, assigning a new unique ID.
 
         Args:
-            title: The task description.
-            due_date: Optional natural language due date.
+            task: The Task object to add. The ID of this object is ignored.
 
         Returns:
-            The created Task.
+            The newly assigned unique ID for the task.
         """
-        task = Task(id=self._next_id, title=title, due_date=due_date)
-        self._tasks[self._next_id] = task
+        new_id = self._next_id
+        # Create a new task instance with the new ID, respecting immutability
+        new_task = dataclasses.replace(task, id=new_id)
+        self._tasks[new_id] = new_task
         self._next_id += 1
+        return new_id
 
-        # Record operation for undo
-        operation = Operation(action="add", task_id=task.id, before_state=None)
-        self._history.append(operation)
-
-        return task
-
-    def list_tasks(self) -> list[Task]:
-        """Return all tasks sorted by ID.
-
-        Returns:
-            List of Tasks ordered by ID.
+    def get(self, task_id: int) -> Optional[Task]:
         """
-        return [self._tasks[tid] for tid in sorted(self._tasks.keys())]
-
-    def find_task(self, reference: str) -> Task:
-        """Find a task by title substring or ID.
+        Retrieves a task by its ID.
 
         Args:
-            reference: Task title substring or "task X" / "#X" format.
+            task_id: The ID of the task to retrieve.
 
         Returns:
-            The matching Task.
-
-        Raises:
-            TaskNotFoundError: If no task matches.
-            AmbiguousTaskError: If multiple tasks match.
+            The Task object if found, otherwise None.
         """
-        # Try ID-based reference first
-        if reference.startswith("task ") or reference.startswith("#"):
-            try:
-                id_str = reference.split()[-1] if reference.startswith("task ") else reference[1:]
-                task_id = int(id_str)
-                if task_id in self._tasks:
-                    return self._tasks[task_id]
-            except ValueError:
-                pass  # Not a valid ID, try title search
+        return self._tasks.get(task_id)
 
-        # Search by title substring
-        matches: list[tuple[int, Task]] = []
-        for tid, task in self._tasks.items():
-            if reference.lower() in task.title.lower():
-                matches.append((tid, task))
+    def get_all(self) -> List[Task]:
+        """
+        Returns all tasks, sorted by their ID.
 
-        if not matches:
-            raise TaskNotFoundError(reference)
+        Returns:
+            A list of all Task objects.
+        """
+        return sorted(self._tasks.values(), key=lambda t: t.id)
 
-        if len(matches) > 1:
-            # Multiple matches - return ambiguous with titles
-            titles = [task.title for _, task in matches]
-            raise AmbiguousTaskError(reference, titles)
-
-        return matches[0][1]
-
-    def update_task(
-        self, task_id: int, title: Optional[str] = None, due_date: Optional[str] = None
-    ) -> Task:
-        """Update a task's title and/or due date.
+    def update(self, task_id: int, updated_task: Task) -> bool:
+        """
+        Updates an existing task.
 
         Args:
             task_id: The ID of the task to update.
-            title: New title (None to keep existing).
-            due_date: New due date (None to keep existing).
+            updated_task: The new Task object to replace the old one.
 
         Returns:
-            The updated Task.
-
-        Raises:
-            TaskNotFoundError: If task_id doesn't exist.
+            True if the update was successful, False if the task was not found.
         """
         if task_id not in self._tasks:
-            raise TaskNotFoundError(str(task_id))
+            return False
+        # Ensure the ID in the updated task object is correct
+        if task_id != updated_task.id:
+            updated_task = dataclasses.replace(updated_task, id=task_id)
+        self._tasks[task_id] = updated_task
+        return True
 
-        task = self._tasks[task_id]
-        before_state = Task(
-            id=task.id,
-            title=task.title,
-            status=task.status,
-            due_date=task.due_date,
-            created_at=task.created_at,
-        )
-
-        if title is not None:
-            task.title = title
-        if due_date is not None:
-            task.due_date = due_date
-
-        # Record operation for undo
-        operation = Operation(action="update", task_id=task_id, before_state=before_state)
-        self._history.append(operation)
-
-        return task
-
-    def complete_task(self, task_id: int) -> Task:
-        """Mark a task as completed.
-
-        Args:
-            task_id: The ID of the task to complete.
-
-        Returns:
-            The updated Task.
-
-        Raises:
-            TaskNotFoundError: If task_id doesn't exist.
-            AlreadyCompletedError: If task is already completed.
+    def delete(self, task_id: int) -> bool:
         """
-        if task_id not in self._tasks:
-            raise TaskNotFoundError(str(task_id))
-
-        task = self._tasks[task_id]
-
-        if task.status == "completed":
-            raise AlreadyCompletedError(task.title)
-
-        before_state = Task(
-            id=task.id,
-            title=task.title,
-            status=task.status,
-            due_date=task.due_date,
-            created_at=task.created_at,
-        )
-
-        task.status = "completed"
-
-        # Record operation for undo
-        operation = Operation(action="complete", task_id=task_id, before_state=before_state)
-        self._history.append(operation)
-
-        return task
-
-    def delete_task(self, task_id: int) -> Task:
-        """Delete a task.
+        Deletes a task by its ID.
 
         Args:
             task_id: The ID of the task to delete.
 
         Returns:
-            The deleted Task.
-
-        Raises:
-            TaskNotFoundError: If task_id doesn't exist.
+            True if the deletion was successful, False if the task was not found.
         """
-        if task_id not in self._tasks:
-            raise TaskNotFoundError(str(task_id))
+        if task_id in self._tasks:
+            del self._tasks[task_id]
+            return True
+        return False
 
-        task = self._tasks[task_id]
-        before_state = Task(
-            id=task.id,
-            title=task.title,
-            status=task.status,
-            due_date=task.due_date,
-            created_at=task.created_at,
-        )
-
-        del self._tasks[task_id]
-
-        # Record operation for undo
-        operation = Operation(action="delete", task_id=task_id, before_state=before_state)
-        self._history.append(operation)
-
-        return task
-
-    def undo(self) -> Operation:
-        """Undo the last operation.
+    def count(self) -> int:
+        """
+        Returns the total number of tasks in the store.
 
         Returns:
-            The Operation that was undone.
-
-        Raises:
-            NoHistoryError: If there's nothing to undo.
+            The number of tasks.
         """
-        if not self._history:
-            raise NoHistoryError()
+        return len(self._tasks)
 
-        operation = self._history.pop()
+    def filter_by_status(self, status: TaskStatus) -> List[Task]:
+        """
+        Returns tasks matching a specific status, sorted by ID.
 
-        if operation.action == "add":
-            # Remove the added task
-            if operation.task_id is not None and operation.task_id in self._tasks:
-                del self._tasks[operation.task_id]
+        Args:
+            status: The TaskStatus to filter by.
 
-        elif operation.action in ("update", "complete"):
-            # Restore the previous state
-            if operation.task_id is not None and operation.before_state is not None:
-                self._tasks[operation.task_id] = operation.before_state
+        Returns:
+            A list of matching Task objects.
+        """
+        filtered_tasks = [task for task in self._tasks.values() if task.status == status]
+        return sorted(filtered_tasks, key=lambda t: t.id)
 
-        elif operation.action == "delete":
-            # Restore the deleted task
-            if operation.before_state is not None:
-                self._tasks[operation.before_state.id] = operation.before_state
+    def search(self, query: str) -> List[Task]:
+        """
+        Returns tasks with a title containing the search query (case-insensitive).
 
-        return operation
+        Args:
+            query: The string to search for in task titles.
+
+        Returns:
+            A list of matching Task objects, sorted by ID.
+        """
+        query_lower = query.lower()
+        searched_tasks = [
+            task for task in self._tasks.values() if query_lower in task.title.lower()
+        ]
+        return sorted(searched_tasks, key=lambda t: t.id)

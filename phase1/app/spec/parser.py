@@ -3,7 +3,7 @@
 import re
 from typing import Optional
 
-from app.spec.models import Operation, Specification
+from core.models.spec_models import Operation, Specification
 
 
 class ParseError(Exception):

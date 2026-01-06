@@ -14,4 +14,4 @@ if not exist "venv\" (
 )
 
 REM Run the application
-python -m src.main %*
+python phase1/app/main.py %*

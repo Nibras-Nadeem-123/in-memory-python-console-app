@@ -5,11 +5,11 @@ This demonstrates the spec-driven pattern:
   Input → [Parser: SPEC] → [Engine: EXECUTION] → Output
 """
 
-from app.context import AppContext
-from app.spec.models import Operation, Specification
-from app.spec.parser import ParseError
-from app.todo.service import TodoNotFoundError
-from app.utils.console import ConsoleUI
+from phase1.app.context import AppContext
+from core.models.spec_models import Operation, Specification
+from phase1.app.spec.parser import ParseError
+from phase1.app.todo.service import TodoNotFoundError
+from phase1.app.utils.console import ConsoleUI
 
 
 class Engine:

@@ -19,11 +19,11 @@
 
 **Purpose**: Project initialization and basic structure
 
-- [ ] T001 Create project directory structure: `src/`, `tests/unit/`, `tests/integration/`
-- [ ] T002 [P] Create `pyproject.toml` with Python 3.11+ requirement and pytest dependency
-- [ ] T003 [P] Create `.gitignore` for Python (`__pycache__/`, `*.pyc`, `.pytest_cache/`)
-- [ ] T004 [P] Create empty `__init__.py` files in `src/` and test directories
-- [ ] T005 [P] Create `README.md` with project overview and setup instructions
+- [X] T001 Create project directory structure: `src/`, `tests/unit/`, `tests/integration/`
+- [X] T002 [P] Create `pyproject.toml` with Python 3.11+ requirement and pytest dependency
+- [X] T003 [P] Create `.gitignore` for Python (`__pycache__/`, `*.pyc`, `.pytest_cache/`)
+- [X] T004 [P] Create empty `__init__.py` files in `src/` and test directories
+- [X] T005 [P] Create `README.md` with project overview and setup instructions
 
 **Checkpoint**: Basic project structure ready for development
 
@@ -37,38 +37,38 @@
 
 ### Foundational Models
 
-- [ ] T006 [P] Define enums in `src/task_model.py`: TaskStatus, Priority, OperationType
-- [ ] T007 [P] Define Task dataclass in `src/task_model.py` with validation in `__post_init__`
-- [ ] T008 [P] Define Command dataclass in `src/task_model.py`
-- [ ] T009 [P] Define CommandResult dataclass in `src/task_model.py`
-- [ ] T010 [P] Define ParseError and ValidationError exceptions in `src/task_model.py`
+- [X] T006 [P] Define enums in `src/task_model.py`: TaskStatus, Priority, OperationType
+- [X] T007 [P] Define Task dataclass in `src/task_model.py` with validation in `__post_init__`
+- [X] T008 [P] Define Command dataclass in `src/task_model.py`
+- [X] T009 [P] Define CommandResult dataclass in `src/task_model.py`
+- [X] T010 [P] Define ParseError and ValidationError exceptions in `src/task_model.py`
 
 ### Foundational Storage
 
-- [ ] T011 Create TaskStore class in `src/task_store.py` with `__init__`, `_tasks` dict, `_next_id` counter
-- [ ] T012 Implement TaskStore.add() method - assign ID, store task, return ID
-- [ ] T013 Implement TaskStore.get() method - retrieve task by ID, return Optional[Task]
-- [ ] T014 Implement TaskStore.get_all() method - return all tasks sorted by ID
-- [ ] T015 Implement TaskStore.update() method - replace task at given ID, return success bool
-- [ ] T016 Implement TaskStore.delete() method - remove task by ID, return success bool
-- [ ] T017 Implement TaskStore.count() method - return total number of tasks
+- [X] T011 Create TaskStore class in `src/task_store.py` with `__init__`, `_tasks` dict, `_next_id` counter
+- [X] T012 Implement TaskStore.add() method - assign ID, store task, return ID
+- [X] T013 Implement TaskStore.get() method - retrieve task by ID, return Optional[Task]
+- [X] T014 Implement TaskStore.get_all() method - return all tasks sorted by ID
+- [X] T015 Implement TaskStore.update() method - replace task at given ID, return success bool
+- [X] T016 Implement TaskStore.delete() method - remove task by ID, return success bool
+- [X] T017 Implement TaskStore.count() method - return total number of tasks
 
 ### Foundational Utilities
 
-- [ ] T018 [P] Create `src/todo_utils.py` with format_task() function
-- [ ] T019 [P] Implement format_task_list() function in `src/todo_utils.py`
-- [ ] T020 [P] Implement validate_title() function in `src/todo_utils.py`
-- [ ] T021 [P] Implement normalize_text() function in `src/todo_utils.py`
+- [X] T018 [P] Create `src/todo_utils.py` with format_task() function
+- [X] T019 [P] Implement format_task_list() function in `src/todo_utils.py`
+- [X] T020 [P] Implement validate_title() function in `src/todo_utils.py`
+- [X] T021 [P] Implement normalize_text() function in `src/todo_utils.py`
 
 ### Foundational Tests
 
-- [ ] T022 [P] Write unit tests for Task model in `tests/unit/test_task_model.py` (valid data, invalid ID, invalid title, enum validation)
-- [ ] T023 [P] Write unit tests for TaskStatus, Priority, OperationType enums in `tests/unit/test_task_model.py`
-- [ ] T024 [P] Write unit tests for Command and CommandResult in `tests/unit/test_task_model.py`
-- [ ] T025 [P] Write unit tests for TaskStore.add() in `tests/unit/test_task_store.py` (ID assignment, storage, sequence)
-- [ ] T026 [P] Write unit tests for TaskStore.get() in `tests/unit/test_task_store.py` (found, not found)
-- [ ] T027 [P] Write unit tests for TaskStore CRUD operations in `tests/unit/test_task_store.py` (update, delete, get_all)
-- [ ] T028 [P] Write unit tests for utilities in `tests/unit/test_todo_utils.py`
+- [X] T022 [P] Write unit tests for Task model in `tests/unit/test_task_model.py` (valid data, invalid ID, invalid title, enum validation)
+- [X] T023 [P] Write unit tests for TaskStatus, Priority, OperationType enums in `tests/unit/test_task_model.py`
+- [X] T024 [P] Write unit tests for Command and CommandResult in `tests/unit/test_task_model.py`
+- [X] T025 [P] Write unit tests for TaskStore.add() in `tests/unit/test_task_store.py` (ID assignment, storage, sequence)
+- [X] T026 [P] Write unit tests for TaskStore.get() in `tests/unit/test_task_store.py` (found, not found)
+- [X] T027 [P] Write unit tests for TaskStore CRUD operations in `tests/unit/test_task_store.py` (update, delete, get_all)
+- [X] T028 [P] Write unit tests for utilities in `tests/unit/test_todo_utils.py`
 
 **Checkpoint**: Foundation ready - all models, storage, and utilities tested and working
 
@@ -88,53 +88,53 @@
 
 ### Parser for User Story 1
 
-- [ ] T029 [P] [US1] Create InputParser class in `src/input_parser.py` with parse() method stub
-- [ ] T030 [P] [US1] Implement InputParser._detect_operation() to identify ADD, LIST, COMPLETE, EXIT operations
-- [ ] T031 [P] [US1] Implement InputParser._extract_add_params() to extract title and priority from "add task" commands
-- [ ] T032 [P] [US1] Implement InputParser._extract_task_id() to extract numeric ID from text
-- [ ] T033 [US1] Wire up InputParser.parse() to route to operation-specific extractors and return Command
+- [X] T029 [P] [US1] Create InputParser class in `src/input_parser.py` with parse() method stub
+- [X] T030 [P] [US1] Implement InputParser._detect_operation() to identify ADD, LIST, COMPLETE, EXIT operations
+- [X] T031 [P] [US1] Implement InputParser._extract_add_params() to extract title and priority from "add task" commands
+- [X] T032 [P] [US1] Implement InputParser._extract_task_id() to extract numeric ID from text
+- [X] T033 [US1] Wire up InputParser.parse() to route to operation-specific extractors and return Command
 
 ### Parser Tests for User Story 1
 
-- [ ] T034 [P] [US1] Write test for parsing "add task: write documentation" in `tests/unit/test_input_parser.py`
-- [ ] T035 [P] [US1] Write test for parsing "add task: X with priority high" in `tests/unit/test_input_parser.py`
-- [ ] T036 [P] [US1] Write test for parsing "list tasks" in `tests/unit/test_input_parser.py`
-- [ ] T037 [P] [US1] Write test for parsing "complete task 5" in `tests/unit/test_input_parser.py`
-- [ ] T038 [P] [US1] Write test for parsing "exit" command in `tests/unit/test_input_parser.py`
-- [ ] T039 [P] [US1] Write test for invalid command (raises ParseError) in `tests/unit/test_input_parser.py`
-- [ ] T040 [P] [US1] Write test for empty input handling in `tests/unit/test_input_parser.py`
+- [X] T034 [P] [US1] Write test for parsing "add task: write documentation" in `tests/unit/test_input_parser.py`
+- [X] T035 [P] [US1] Write test for parsing "add task: X with priority high" in `tests/unit/test_input_parser.py`
+- [X] T036 [P] [US1] Write test for parsing "list tasks" in `tests/unit/test_input_parser.py`
+- [X] T037 [P] [US1] Write test for parsing "complete task 5" in `tests/unit/test_input_parser.py`
+- [X] T038 [P] [US1] Write test for parsing "exit" command in `tests/unit/test_input_parser.py`
+- [X] T039 [P] [US1] Write test for invalid command (raises ParseError) in `tests/unit/test_input_parser.py`
+- [X] T040 [P] [US1] Write test for empty input handling in `tests/unit/test_input_parser.py`
 
 ### Executor for User Story 1
 
-- [ ] T041 [P] [US1] Create TodoExecutor class in `src/todo_executor.py` with __init__(store: TaskStore)
-- [ ] T042 [P] [US1] Implement TodoExecutor.execute() to route commands to operation handlers
-- [ ] T043 [P] [US1] Implement TodoExecutor._handle_add() to create Task and call store.add()
-- [ ] T044 [P] [US1] Implement TodoExecutor._handle_list() to call store.get_all() and return CommandResult with data
-- [ ] T045 [US1] Implement TodoExecutor._handle_complete() to get task, update status, call store.update()
+- [X] T041 [P] [US1] Create TodoExecutor class in `src/todo_executor.py` with __init__(store: TaskStore)
+- [X] T042 [P] [US1] Implement TodoExecutor.execute() to route commands to operation handlers
+- [X] T043 [P] [US1] Implement TodoExecutor._handle_add() to create Task and call store.add()
+- [X] T044 [P] [US1] Implement TodoExecutor._handle_list() to call store.get_all() and return CommandResult with data
+- [X] T045 [US1] Implement TodoExecutor._handle_complete() to get task, update status, call store.update()
 
 ### Executor Tests for User Story 1
 
-- [ ] T046 [P] [US1] Write test for execute ADD command in `tests/unit/test_todo_executor.py` (verify task created)
-- [ ] T047 [P] [US1] Write test for execute LIST command in `tests/unit/test_todo_executor.py` (verify tasks returned)
-- [ ] T048 [P] [US1] Write test for execute COMPLETE command in `tests/unit/test_todo_executor.py` (found and not found cases)
-- [ ] T049 [P] [US1] Write test for ADD with different priorities in `tests/unit/test_todo_executor.py`
-- [ ] T050 [P] [US1] Write test for error handling (task not found) in `tests/unit/test_todo_executor.py`
+- [X] T046 [P] [US1] Write test for execute ADD command in `tests/unit/test_todo_executor.py` (verify task created)
+- [X] T047 [P] [US1] Write test for execute LIST command in `tests/unit/test_todo_executor.py` (verify tasks returned)
+- [X] T048 [P] [US1] Write test for execute COMPLETE command in `tests/unit/test_todo_executor.py` (found and not found cases)
+- [X] T049 [P] [US1] Write test for ADD with different priorities in `tests/unit/test_todo_executor.py`
+- [X] T050 [P] [US1] Write test for error handling (task not found) in `tests/unit/test_todo_executor.py`
 
 ### CLI for User Story 1
 
-- [ ] T051 [US1] Create main() function in `src/todo_cli.py` with REPL loop
-- [ ] T052 [US1] Implement display_welcome() in `src/todo_cli.py` with welcome message and instructions
-- [ ] T053 [US1] Implement display_result() in `src/todo_cli.py` to format and print CommandResult
-- [ ] T054 [US1] Wire up main() to create TaskStore, InputParser, TodoExecutor and run REPL
-- [ ] T055 [US1] Add Ctrl+C signal handling for graceful exit in `src/todo_cli.py`
-- [ ] T056 [US1] Add display_error() for error formatting with color (if terminal supports it)
+- [X] T051 [US1] Create main() function in `src/todo_cli.py` with REPL loop
+- [X] T052 [US1] Implement display_welcome() in `src/todo_cli.py` with welcome message and instructions
+- [X] T053 [US1] Implement display_result() in `src/todo_cli.py` to format and print CommandResult
+- [X] T054 [US1] Wire up main() to create TaskStore, InputParser, TodoExecutor and run REPL
+- [X] T055 [US1] Add Ctrl+C signal handling for graceful exit in `src/todo_cli.py`
+- [X] T056 [US1] Add display_error() for error formatting with color (if terminal supports it)
 
 ### Integration Tests for User Story 1
 
-- [ ] T057 [US1] Write integration test for complete workflow in `tests/integration/test_todo_workflows.py`: add 3 tasks → list → complete one → verify
-- [ ] T058 [US1] Write integration test for add with priority in `tests/integration/test_todo_workflows.py`
-- [ ] T059 [US1] Write integration test for empty list scenario in `tests/integration/test_todo_workflows.py`
-- [ ] T060 [US1] Write integration test for spec-driven flow validation in `tests/integration/test_sdd_workflow.py`: parse (no side effects) → execute (state changes)
+- [X] T057 [US1] Write integration test for complete workflow in `tests/integration/test_todo_workflows.py`: add 3 tasks → list → complete one → verify
+- [X] T058 [US1] Write integration test for add with priority in `tests/integration/test_todo_workflows.py`
+- [X] T059 [US1] Write integration test for empty list scenario in `tests/integration/test_todo_workflows.py`
+- [X] T060 [US1] Write integration test for spec-driven flow validation in `tests/integration/test_sdd_workflow.py`: parse (no side effects) → execute (state changes)
 
 ### Manual Testing for User Story 1
 
@@ -160,37 +160,37 @@
 
 ### Storage Extensions for User Story 2
 
-- [ ] T065 [P] [US2] Implement TaskStore.filter_by_status() in `src/task_store.py` - return List[Task] matching status
-- [ ] T066 [P] [US2] Implement TaskStore.search() in `src/task_store.py` - case-insensitive title search
-- [ ] T067 [P] [US2] Write unit tests for filter_by_status() in `tests/unit/test_task_store.py`
-- [ ] T068 [P] [US2] Write unit tests for search() in `tests/unit/test_task_store.py` (matches, no matches, case insensitive)
+- [X] T065 [P] [US2] Implement TaskStore.filter_by_status() in `src/task_store.py` - return List[Task] matching status
+- [X] T066 [P] [US2] Implement TaskStore.search() in `src/task_store.py` - case-insensitive title search
+- [X] T067 [P] [US2] Write unit tests for filter_by_status() in `tests/unit/test_task_store.py`
+- [X] T068 [P] [US2] Write unit tests for search() in `tests/unit/test_task_store.py` (matches, no matches, case insensitive)
 
 ### Parser Extensions for User Story 2
 
-- [ ] T069 [P] [US2] Extend InputParser._detect_operation() to recognize SEARCH operation
-- [ ] T070 [P] [US2] Implement InputParser._extract_search_query() to extract keyword from "search <query>"
-- [ ] T071 [P] [US2] Extend InputParser._extract_list_params() to detect "pending" or "completed" filters
-- [ ] T072 [P] [US2] Write test for parsing "list pending tasks" in `tests/unit/test_input_parser.py`
-- [ ] T073 [P] [US2] Write test for parsing "list completed tasks" in `tests/unit/test_input_parser.py`
-- [ ] T074 [P] [US2] Write test for parsing "search documentation" in `tests/unit/test_input_parser.py`
+- [X] T069 [P] [US2] Extend InputParser._detect_operation() to recognize SEARCH operation
+- [X] T070 [P] [US2] Implement InputParser._extract_search_query() to extract keyword from "search <query>"
+- [X] T071 [P] [US2] Extend InputParser._extract_list_params() to detect "pending" or "completed" filters
+- [X] T072 [P] [US2] Write test for parsing "list pending tasks" in `tests/unit/test_input_parser.py`
+- [X] T073 [P] [US2] Write test for parsing "list completed tasks" in `tests/unit/test_input_parser.py`
+- [X] T074 [P] [US2] Write test for parsing "search documentation" in `tests/unit/test_input_parser.py`
 
 ### Executor Extensions for User Story 2
 
-- [ ] T075 [P] [US2] Implement TodoExecutor._handle_search() to call store.search() and return results
-- [ ] T076 [US2] Update TodoExecutor._handle_list() to support filter parameter (pending/completed/all)
-- [ ] T077 [P] [US2] Write test for execute LIST with pending filter in `tests/unit/test_todo_executor.py`
-- [ ] T078 [P] [US2] Write test for execute LIST with completed filter in `tests/unit/test_todo_executor.py`
-- [ ] T079 [P] [US2] Write test for execute SEARCH command in `tests/unit/test_todo_executor.py`
+- [X] T075 [P] [US2] Implement TodoExecutor._handle_search() to call store.search() and return results
+- [X] T076 [US2] Update TodoExecutor._handle_list() to support filter parameter (pending/completed/all)
+- [X] T077 [P] [US2] Write test for execute LIST with pending filter in `tests/unit/test_todo_executor.py`
+- [X] T078 [P] [US2] Write test for execute LIST with completed filter in `tests/unit/test_todo_executor.py`
+- [X] T079 [P] [US2] Write test for execute SEARCH command in `tests/unit/test_todo_executor.py`
 
 ### Integration Tests for User Story 2
 
-- [ ] T080 [US2] Write integration test in `tests/integration/test_todo_workflows.py`: create 10 tasks (5 pending, 5 completed) → filter by pending → verify count
-- [ ] T081 [US2] Write integration test for search workflow in `tests/integration/test_todo_workflows.py`: create tasks with "documentation" and "code" → search "doc" → verify matches
-- [ ] T082 [US2] Write integration test for search with no matches in `tests/integration/test_todo_workflows.py`
+- [X] T080 [US2] Write integration test in `tests/integration/test_todo_workflows.py`: create 10 tasks (5 pending, 5 completed) → filter by pending → verify count
+- [X] T081 [US2] Write integration test for search workflow in `tests/integration/test_todo_workflows.py`: create tasks with "documentation" and "code" → search "doc" → verify matches
+- [X] T082 [US2] Write integration test for search with no matches in `tests/integration/test_todo_workflows.py`
 
 ### Manual Testing for User Story 2
 
-- [ ] T083 [US2] Manual test: Create 10 tasks, complete 5, list pending, verify only 5 shown
+- [ ] T083 [US2] Manual test: Create 10 tasks (5 pending, 5 completed), filter by status, search by keyword, verify correct subsets
 - [ ] T084 [US2] Manual test: Search for keyword, verify correct tasks returned
 - [ ] T085 [US2] Manual test: Search with no matches, verify helpful message
 
@@ -211,27 +211,27 @@
 
 ### Parser Extensions for User Story 3
 
-- [ ] T086 [P] [US3] Extend InputParser._detect_operation() to recognize DELETE and UPDATE operations
-- [ ] T087 [P] [US3] Implement InputParser._extract_update_params() to parse title and priority updates
-- [ ] T088 [P] [US3] Write test for parsing "delete task 5" in `tests/unit/test_input_parser.py`
-- [ ] T089 [P] [US3] Write test for parsing "update task 1 title to new title" in `tests/unit/test_input_parser.py`
-- [ ] T090 [P] [US3] Write test for parsing "update task 3 priority to high" in `tests/unit/test_input_parser.py`
-- [ ] T091 [P] [US3] Write test for parsing "change task 2 priority to low" in `tests/unit/test_input_parser.py`
+- [X] T086 [P] [US3] Extend InputParser._detect_operation() to recognize DELETE and UPDATE operations
+- [X] T087 [P] [US3] Implement InputParser._extract_update_params() to parse title and priority updates
+- [X] T088 [P] [US3] Write test for parsing "delete task 5" in `tests/unit/test_input_parser.py`
+- [X] T089 [P] [US3] Write test for parsing "update task 1 title to new title" in `tests/unit/test_input_parser.py`
+- [X] T090 [P] [US3] Write test for parsing "update task 3 priority to high" in `tests/unit/test_input_parser.py`
+- [X] T091 [P] [US3] Write test for parsing "change task 2 priority to low" in `tests/unit/test_input_parser.py`
 
 ### Executor Extensions for User Story 3
 
-- [ ] T092 [P] [US3] Implement TodoExecutor._handle_delete() to call store.delete() and return result
-- [ ] T093 [P] [US3] Implement TodoExecutor._handle_update() to get task, create updated Task, call store.update()
-- [ ] T094 [P] [US3] Write test for execute DELETE command in `tests/unit/test_todo_executor.py` (found and not found)
-- [ ] T095 [P] [US3] Write test for execute UPDATE title in `tests/unit/test_todo_executor.py`
-- [ ] T096 [P] [US3] Write test for execute UPDATE priority in `tests/unit/test_todo_executor.py`
-- [ ] T097 [P] [US3] Write test for UPDATE with invalid task ID in `tests/unit/test_todo_executor.py`
+- [X] T092 [P] [US3] Implement TodoExecutor._handle_delete() to call store.delete() and return result
+- [X] T093 [P] [US3] Implement TodoExecutor._handle_update() to get task, create updated Task, call store.update()
+- [X] T094 [P] [US3] Write test for execute DELETE command in `tests/unit/test_todo_executor.py` (found and not found)
+- [X] T095 [P] [US3] Write test for execute UPDATE title in `tests/unit/test_todo_executor.py`
+- [X] T096 [P] [US3] Write test for execute UPDATE priority in `tests/unit/test_todo_executor.py`
+- [X] T097 [P] [US3] Write test for UPDATE with invalid task ID in `tests/unit/test_todo_executor.py`
 
 ### Integration Tests for User Story 3
 
-- [ ] T098 [US3] Write integration test in `tests/integration/test_todo_workflows.py`: create 3 tasks → delete task 2 → list → verify only 2 remain
-- [ ] T099 [US3] Write integration test for update workflow in `tests/integration/test_todo_workflows.py`: create task → update title → update priority → verify changes
-- [ ] T100 [US3] Write integration test for delete non-existent task in `tests/integration/test_todo_workflows.py`
+- [X] T098 [US3] Write integration test in `tests/integration/test_todo_workflows.py`: create 3 tasks → delete task 2 → list → verify only 2 remain
+- [X] T099 [US3] Write integration test for update workflow in `tests/integration/test_todo_workflows.py`: create task → update title → update priority → verify changes
+- [X] T100 [US3] Write integration test for delete non-existent task in `tests/integration/test_todo_workflows.py`
 
 ### Manual Testing for User Story 3
 
@@ -249,35 +249,35 @@
 
 ### Error Handling Improvements
 
-- [ ] T104 [P] Review all error messages for clarity and add suggestions (e.g., "Task #5 not found. Use 'list' to see all tasks.")
-- [ ] T105 [P] Add comprehensive ParseError handling in CLI with helpful examples
-- [ ] T106 [P] Test edge case: empty input (should be ignored gracefully)
-- [ ] T107 [P] Test edge case: whitespace-only input (should be ignored gracefully)
-- [ ] T108 [P] Test edge case: complete already completed task (should show warning, not error)
+- [X] T104 [P] Review all error messages for clarity and add suggestions (e.g., "Task #5 not found. Use 'list' to see all tasks.")
+- [X] T105 [P] Add comprehensive ParseError handling in CLI with helpful examples
+- [X] T106 [P] Test edge case: empty input (should be ignored gracefully)
+- [X] T107 [P] Test edge case: whitespace-only input (should be ignored gracefully)
+- [X] T108 [P] Test edge case: complete already completed task (should show warning, not error)
 
 ### Display Improvements
 
-- [ ] T109 [P] Improve task list formatting with better alignment and symbols (☐ for pending, ☑ for completed)
-- [ ] T110 [P] Add color output support (green for success, red for errors, yellow for warnings) if terminal supports it
-- [ ] T111 [P] Add "No tasks found" message with helpful suggestion when list is empty
-- [ ] T112 [P] Improve welcome message with quick start examples
+- [X] T109 [P] Improve task list formatting with better alignment and symbols (☐ for pending, ☑ for completed)
+- [X] T110 [P] Add color output support (green for success, red for errors, yellow for warnings) if terminal supports it
+- [X] T111 [P] Add "No tasks found" message with helpful suggestion when list is empty
+- [X] T112 [P] Improve welcome message with quick start examples
 
 ### Command Variations
 
-- [ ] T113 [P] Add "create task" as alias for "add task" in parser
-- [ ] T114 [P] Add "new task" as alias for "add task" in parser
-- [ ] T115 [P] Add "show tasks" as alias for "list tasks" in parser
-- [ ] T116 [P] Add "done <id>" as alias for "complete task <id>" in parser
-- [ ] T117 [P] Add "remove task" as alias for "delete task" in parser
-- [ ] T118 [P] Add "find" as alias for "search" in parser
-- [ ] T119 [P] Write tests for all command variations in `tests/unit/test_input_parser.py`
+- [X] T113 [P] Add "create task" as alias for "add task" in parser
+- [X] T114 [P] Add "new task" as alias for "add task" in parser
+- [X] T115 [P] Add "show tasks" as alias for "list tasks" in parser
+- [X] T116 [P] Add "done <id>" as alias for "complete task <id>" in parser
+- [X] T117 [P] Add "remove task" as alias for "delete task" in parser
+- [X] T118 [P] Add "find" as alias for "search" in parser
+- [X] T119 [P] Write tests for all command variations in `tests/unit/test_input_parser.py`
 
 ### Documentation
 
-- [ ] T120 [P] Create `specs/006-todo-console-app/USAGE.md` with comprehensive usage examples
-- [ ] T121 [P] Add troubleshooting section to README.md
-- [ ] T122 [P] Document command patterns and variations in README.md
-- [ ] T123 [P] Add architecture diagram to README.md showing 5-layer separation
+- [X] T120 [P] Create `specs/006-todo-console-app/USAGE.md` with comprehensive usage examples
+- [X] T121 [P] Add troubleshooting section to README.md
+- [X] T122 [P] Document command patterns and variations in README.md
+- [X] T123 [P] Add architecture diagram to README.md showing 5-layer separation
 
 ### Performance & Quality
 
