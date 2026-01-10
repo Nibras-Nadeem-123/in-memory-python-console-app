@@ -1,0 +1,2 @@
+web: python -m phase2.backend.main
+worker: python -m phase2.backend.main
