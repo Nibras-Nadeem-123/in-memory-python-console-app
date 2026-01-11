@@ -1,6 +1,7 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic import field_validator
 from typing import List, Union
+import os
 
 
 class DatabaseSettings(BaseSettings):
@@ -29,14 +30,11 @@ class Settings(BaseSettings):
     port: int = 8000
     log_level: str = "DEBUG"
     database_url: str = "sqlite:///./test.db"
-    cors_origins: List[str] = ["http://localhost:3000", "http://localhost:3001"]
+    _cors_origins_str: str = os.getenv("CORS_ORIGINS", "*")
 
-    @field_validator("cors_origins", mode="before")
-    @classmethod
-    def assemble_cors_origins(cls, v: Union[str, List[str]]) -> List[str]:
-        if isinstance(v, str):
-            return [origin.strip() for origin in v.split(",")]
-        return v
+    @property
+    def cors_origins(self) -> List[str]:
+        return [origin.strip() for origin in self._cors_origins_str.split(",")]
 
 
 # Global settings instance

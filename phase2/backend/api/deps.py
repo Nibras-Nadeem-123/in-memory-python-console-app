@@ -1,6 +1,6 @@
 from fastapi import Depends
 from sqlmodel import Session
-from ..db import get_session
+from db import get_session
 
 
 def get_db_session():

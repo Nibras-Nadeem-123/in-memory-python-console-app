@@ -1,10 +1,10 @@
 from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlmodel import Session
-from ..models import Todo, TodoCreate, TodoUpdate, TodoResponse, TodoStatusUpdate
-from ..crud import get_todos, get_todo_by_id, create_todo as crud_create_todo, update_todo, delete_todo, update_todo_status
-from .deps import get_db_session
-from ..exceptions import TodoNotFoundError, ValidationError, DatabaseError
+from models import Todo, TodoCreate, TodoUpdate, TodoResponse, TodoStatusUpdate
+from crud import get_todos, get_todo_by_id, create_todo as crud_create_todo, update_todo, delete_todo, update_todo_status
+from api.deps import get_db_session
+from exceptions import TodoNotFoundError, ValidationError, DatabaseError
 
 router = APIRouter(prefix="/api/todos", tags=["todos"])
 

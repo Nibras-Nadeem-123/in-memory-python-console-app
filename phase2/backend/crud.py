@@ -1,7 +1,7 @@
 from typing import List, Optional
 from sqlmodel import Session, select, col
-from .models import Todo, TodoCreate, TodoUpdate
-from .exceptions import TodoNotFoundError, ValidationError
+from models import Todo, TodoCreate, TodoUpdate
+from exceptions import TodoNotFoundError, ValidationError
 
 
 def get_todos(

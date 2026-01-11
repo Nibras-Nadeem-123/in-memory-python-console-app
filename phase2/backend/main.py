@@ -5,9 +5,9 @@ from contextlib import asynccontextmanager
 import logging
 from sqlmodel import SQLModel
 
-from .config import settings
-from .db import engine, check_connection
-from .api.todos import router as todos_router
+from config import settings
+from db import engine, check_connection
+from api.todos import router as todos_router
 
 # Configure logging
 logging.basicConfig(level=settings.log_level)

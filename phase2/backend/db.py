@@ -1,7 +1,7 @@
 from sqlmodel import create_engine, Session, text
 from contextlib import contextmanager
 from typing import Generator
-from .config import settings
+from config import settings
 
 
 # Create database engine with connection pooling
