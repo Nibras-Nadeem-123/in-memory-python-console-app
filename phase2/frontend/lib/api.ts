@@ -7,7 +7,7 @@ import {
   ErrorResponse
 } from './types';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000' || "https://in-memory-python-console-app-production-678946.up.railway.app/";
 
 async function handleResponse<T>(response: Response): Promise<T> {
   if (!response.ok) {
